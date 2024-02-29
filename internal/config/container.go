@@ -1,11 +1,12 @@
 package config
 
 import (
-	"go-service-template/internal/application/car"
 	"log"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 
+	"go-service-template/internal/application/car"
 	"go-service-template/internal/domain"
 	"go-service-template/internal/infrastructure/repository"
 )

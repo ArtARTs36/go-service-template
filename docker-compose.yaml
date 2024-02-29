@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "cars"
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - postgres:/docker-entrypoint-initdb.d/init.sql
+
+  migrations:
+    image: artsafin/goose-migrations
+    volumes:
+      - ./migrations:/migrations
+    command:
+      - postgres
+      - "host=postgres user=root password=root dbname=cars sslmode=disable"
+      - up
+    links:
+      - postgres
+
+volumes:
+  postgres: {}
