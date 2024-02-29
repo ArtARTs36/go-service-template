@@ -1,0 +1,35 @@
+swagger: "2.0"
+info:
+  title: Example service
+  description: Example service
+  version: 0.0.1
+host: localhost
+schemes:
+  - http
+basePath: /
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /cars/{id}:
+    get:
+      description: "Get Car"
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          required: true
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/car-get-response"
+
+definitions:
+  car-get-response:
+    description: "Car"
+    properties:
+      id:
+        type: integer

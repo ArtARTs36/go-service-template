@@ -5,7 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"go-service-template/internal/domain"
+	"github.com/artarts36/go-service-template/internal/domain"
 )
 
 type PGCarRepository struct {

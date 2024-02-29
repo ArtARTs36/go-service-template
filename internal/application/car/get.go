@@ -3,7 +3,7 @@ package car
 import (
 	"context"
 
-	"go-service-template/internal/domain"
+	"github.com/artarts36/go-service-template/internal/domain"
 )
 
 type GetOperation struct {

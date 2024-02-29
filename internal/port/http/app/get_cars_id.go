@@ -1,0 +1,15 @@
+package app
+
+import (
+	"github.com/artarts36/go-service-template/internal/port/http/generated/models"
+	apiOperations "github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
+	"github.com/go-openapi/runtime/middleware"
+)
+
+func (srv *Service) GetCarsIDHandler(params apiOperations.GetCarsIDParams) middleware.Responder {
+	return &apiOperations.GetCarsIDOK{
+		Payload: &models.CarGetResponse{
+			ID: 1,
+		},
+	}
+}

@@ -1,9 +1,9 @@
 package config
 
 type Config struct {
-	DB DBConfig
+	DB DBConfig `envPrefix:"DB_"`
 }
 
 type DBConfig struct {
-	DSN string
+	DSN string `env:"DSN,required"`
 }

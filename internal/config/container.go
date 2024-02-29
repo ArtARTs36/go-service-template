@@ -6,9 +6,9 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
-	"go-service-template/internal/application/car"
-	"go-service-template/internal/domain"
-	"go-service-template/internal/infrastructure/repository"
+	"github.com/artarts36/go-service-template/internal/application/car"
+	"github.com/artarts36/go-service-template/internal/domain"
+	"github.com/artarts36/go-service-template/internal/infrastructure/repository"
 )
 
 type Container struct {
@@ -33,6 +33,8 @@ func InitContainer(conf *Config) *Container {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	log.Println("[container] connected to db")
 
 	cont := &Container{}
 	cont.Infrastructure.DB = db
