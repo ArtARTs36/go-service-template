@@ -12,12 +12,6 @@ layout:
       file_name: "configure_{{ .Name }}.go"
       skip_exists: false
 
-    - name: cfgPackage
-      source: serverConfig
-      target: "./internal/port/http/app"
-      file_name: "config.go"
-      skip_exists: false
-
     - name: main
       source: serverMain
       target: "./cmd/http/"
