@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
+	"github.com/go-openapi/loads"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi"
 	apiOperations "github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
-
-	"github.com/go-openapi/loads"
 
 	"github.com/artarts36/go-service-template/internal/port/http/app"
 )
@@ -31,6 +30,8 @@ func main() {
 	defer server.Shutdown()
 
 	server.ConfigureAPI()
+
+	api.Logger = log.Debugf
 
 	server.Port = cfg.HTTP.Port
 	if err := server.Serve(); err != nil {

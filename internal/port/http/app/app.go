@@ -1,14 +1,15 @@
-// This file is safe to edit. Once it exists it will not be overwritten
-
 package app
 
-import "github.com/artarts36/go-service-template/internal/config"
+import (
+	log "github.com/sirupsen/logrus"
+
+	"github.com/artarts36/go-service-template/internal/config"
+)
 
 type Service struct {
 	container *config.Container
 }
 
-// New инициализирует сервис
 func New(cfg *Config) *Service {
 	cont := config.InitContainer(&cfg.Config)
 
@@ -18,5 +19,7 @@ func New(cfg *Config) *Service {
 }
 
 func (srv *Service) OnShutdown() {
-	// do smth on shutdown...
+	if err := srv.container.Infrastructure.DB.Close(); err != nil {
+		log.Errorf("[http][service] failed to close db: %s", err.Error())
+	}
 }
