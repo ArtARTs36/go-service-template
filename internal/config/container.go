@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres
 	log "github.com/sirupsen/logrus"
 
 	"github.com/artarts36/go-service-template/internal/application/car"

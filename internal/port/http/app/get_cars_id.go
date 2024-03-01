@@ -6,7 +6,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-func (srv *Service) GetCarsIDHandler(params apiOperations.GetCarsIDParams) middleware.Responder {
+func (srv *Service) GetCarsIDHandler(_ apiOperations.GetCarsIDParams) middleware.Responder {
 	return &apiOperations.GetCarsIDOK{
 		Payload: &models.CarGetResponse{
 			ID: 1,

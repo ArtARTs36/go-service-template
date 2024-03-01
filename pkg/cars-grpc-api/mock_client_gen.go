@@ -47,9 +47,9 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 }
 
 type MockServer struct {
-	Cars     *MockCarsServer
-	Server   *grpc.Server
-	Listener net.Listener
+	Cars   *MockCarsServer
+	Server *grpc.Server
+	Listenernet.Listener
 }
 
 func (m *MockServer) Close() error {

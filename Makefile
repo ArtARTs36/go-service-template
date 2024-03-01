@@ -23,7 +23,7 @@ migration/migrate:
 	docker-compose run migrations
 
 # generate swagger structures
-swagger/gen:
+gen/swagger:
 	@rm -rf ./cmd/http
 	@mkdir -p ./cmd/http
 
@@ -52,3 +52,5 @@ gen/proto:
 
 gen/go:
 	go generate ./...
+
+gen: gen/go gen/proto gen/swagger

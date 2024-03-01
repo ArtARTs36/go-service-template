@@ -1,24 +1,26 @@
 package main
 
 import (
-	"github.com/artarts36/go-service-template/internal/port/grpc"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/artarts36/go-service-template/internal/port/grpc/app"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	cfg, err := grpc.InitConfig("CARS_")
+	cfg, err := app.InitConfig("CARS_")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	application := grpc.NewApp(cfg)
+	application := app.NewApp(cfg)
 
 	go func() {
-		if err := application.Run(); err != nil {
-			panic(err)
+		if runErr := application.Run(); runErr != nil {
+			panic(runErr)
 		}
 	}()
 

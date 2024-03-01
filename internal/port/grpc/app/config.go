@@ -1,4 +1,4 @@
-package grpc
+package app
 
 import (
 	"github.com/caarlos0/env/v10"
@@ -7,7 +7,7 @@ import (
 	"github.com/artarts36/go-service-template/internal/config"
 )
 
-// Config struct
+// Config struct.
 type Config struct {
 	config.Config
 
@@ -18,7 +18,7 @@ type GRPCConfig struct {
 	Port int `env:"PORT,required"`
 }
 
-// InitConfig func
+// InitConfig func.
 func InitConfig(prefix string) (*Config, error) {
 	c := &Config{}
 	opts := env.Options{

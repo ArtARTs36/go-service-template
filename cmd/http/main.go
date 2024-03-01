@@ -27,14 +27,19 @@ func main() {
 	api.GetCarsIDHandler = apiOperations.GetCarsIDHandlerFunc(srv.GetCarsIDHandler)
 	api.ServerShutdown = srv.OnShutdown
 	server := restapi.NewServer(api)
-	defer server.Shutdown()
+	defer func() {
+		shutdownErr := server.Shutdown()
+		if shutdownErr != nil {
+			log.Error(shutdownErr)
+		}
+	}()
 
 	server.ConfigureAPI()
 
 	api.Logger = log.Debugf
 
 	server.Port = cfg.HTTP.Port
-	if err := server.Serve(); err != nil {
-		log.Fatalln(err)
+	if serveErr := server.Serve(); serveErr != nil {
+		log.Error(serveErr)
 	}
 }

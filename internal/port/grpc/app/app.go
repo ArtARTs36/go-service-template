@@ -1,14 +1,15 @@
-package grpc
+package app
 
 import (
 	"context"
 	"fmt"
-	"github.com/artarts36/go-service-template/internal/config"
-	"github.com/artarts36/go-service-template/internal/port/grpc/cars"
-	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api"
-	log "github.com/sirupsen/logrus"
 	"log/slog"
 	"net"
+
+	"github.com/artarts36/go-service-template/internal/config"
+	"github.com/artarts36/go-service-template/internal/port/grpc/handlers/cars"
+	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
@@ -37,7 +38,7 @@ func NewApp(
 	}
 
 	recoveryOpts := []recovery.Option{
-		recovery.WithRecoveryHandler(func(p interface{}) (err error) {
+		recovery.WithRecoveryHandler(func(p interface{}) error {
 			log.Error("Recovered from panic", slog.Any("panic", p))
 
 			return status.Errorf(codes.Internal, "internal error")
@@ -76,8 +77,8 @@ func (a *App) Run() error {
 
 	log.Info("grpc server started")
 
-	if err := a.gRPCServer.Serve(l); err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+	if serveErr := a.gRPCServer.Serve(l); serveErr != nil {
+		return fmt.Errorf("%s: %w", op, serveErr)
 	}
 
 	return nil
