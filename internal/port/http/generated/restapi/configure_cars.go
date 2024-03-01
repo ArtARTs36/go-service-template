@@ -13,7 +13,7 @@ import (
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../generated --name Cars --spec ../../../../../docs/openapi.yaml --template-dir ./swagger-templates/templates --principal interface{}
+//go:generate go-swagger generate server --target ../../generated --name Cars --spec ../../../../../api/openapi/openapi.yaml --template-dir ../../../../../swagger-templates/templates --principal interface{}
 
 func configureFlags(api *operations.CarsAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }

@@ -1,0 +1,33 @@
+package grpc
+
+import (
+	"github.com/caarlos0/env/v10"
+	"github.com/pkg/errors"
+
+	"github.com/artarts36/go-service-template/internal/config"
+)
+
+// Config struct
+type Config struct {
+	config.Config
+
+	GRPC GRPCConfig `envPrefix:"GRPC_"`
+}
+
+type GRPCConfig struct {
+	Port int `env:"PORT,required"`
+}
+
+// InitConfig func
+func InitConfig(prefix string) (*Config, error) {
+	c := &Config{}
+	opts := env.Options{
+		Prefix: prefix,
+	}
+
+	if err := env.ParseWithOptions(c, opts); err != nil {
+		return nil, errors.Wrap(err, "init config failed")
+	}
+
+	return c, nil
+}

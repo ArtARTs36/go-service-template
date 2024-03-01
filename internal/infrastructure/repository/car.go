@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
 	"github.com/jmoiron/sqlx"
 
@@ -18,11 +20,15 @@ func NewPGCarRepository(db *sqlx.DB) domain.CarRepository {
 	}
 }
 
-func (r *PGCarRepository) Find(ctx context.Context, id int) (*domain.Car, error) {
+func (r *PGCarRepository) Find(ctx context.Context, id int64) (*domain.Car, error) {
 	var car *domain.Car
 
 	err := r.db.GetContext(ctx, &car, "SELECT * FROM cars WHERE id=$1", id)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNotFound
+		}
+
 		return nil, err
 	}
 

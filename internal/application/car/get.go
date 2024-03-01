@@ -2,6 +2,8 @@ package car
 
 import (
 	"context"
+	"errors"
+	"github.com/artarts36/go-service-template/internal/infrastructure/repository"
 
 	"github.com/artarts36/go-service-template/internal/domain"
 )
@@ -11,7 +13,7 @@ type GetOperation struct {
 }
 
 type GetOperationParams struct {
-	ID int
+	ID int64
 }
 
 func NewGetOperation(cars domain.CarRepository) *GetOperation {
@@ -19,5 +21,14 @@ func NewGetOperation(cars domain.CarRepository) *GetOperation {
 }
 
 func (o *GetOperation) Get(ctx context.Context, params *GetOperationParams) (*domain.Car, error) {
-	return o.cars.Find(ctx, params.ID)
+	c, err := o.cars.Find(ctx, params.ID)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return nil, ErrCarNotFound
+		}
+
+		return nil, err
+	}
+
+	return c, nil
 }
