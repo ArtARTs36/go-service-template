@@ -7,6 +7,7 @@ import (
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi"
 	apiOperations "github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
 
+	"github.com/artarts36/go-service-template/internal/port/http"
 	"github.com/artarts36/go-service-template/internal/port/http/app"
 )
 
@@ -26,7 +27,7 @@ func main() {
 
 	api.GetCarsIDHandler = apiOperations.GetCarsIDHandlerFunc(srv.GetCarsIDHandler)
 	api.ServerShutdown = srv.OnShutdown
-	server := restapi.NewServer(api)
+	server := restapi.NewServer(api, http.NewConfigurator())
 	defer func() {
 		shutdownErr := server.Shutdown()
 		if shutdownErr != nil {

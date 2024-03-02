@@ -11,6 +11,7 @@ import (
 	apiOperations "github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
 
 	"github.com/artarts36/go-service-template/internal/port/http/app"
+	"github.com/artarts36/go-service-template/internal/port/http"
 )
 
 func main() {
@@ -31,7 +32,7 @@ func main() {
     api.{{ pascalize .Name }}Handler = api{{ pascalize .Package }}.{{ pascalize .Name }}HandlerFunc(srv.{{ pascalize .Name }}Handler)
     {{- end}}
     api.ServerShutdown = srv.OnShutdown
-	server := {{ .APIPackage }}.NewServer(api)
+	server := {{ .APIPackage }}.NewServer(api, http.NewConfigurator())
 	defer func() {
 		shutdownErr := server.Shutdown()
 		if shutdownErr != nil {

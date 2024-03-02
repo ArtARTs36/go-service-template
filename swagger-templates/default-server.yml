@@ -8,7 +8,7 @@ layout:
 
     - name: configure
       source: "asset:serverConfigureapi"
-      target: "{{ joinFilePath .Target .ServerPackage }}"
+      target: "./internal/port/http/"
       file_name: "configure_{{ .Name }}.go"
       skip_exists: false
 

@@ -41,27 +41,37 @@ func init() {
 	}
 }
 
+type configurator interface {
+	ConfigureFlags(api *operations.CarsAPI)
+	ConfigureAPI(api *operations.CarsAPI) http.Handler
+	ConfigureTLS(tlsConfig *tls.Config)
+	ConfigureServer(s *http.Server, scheme, addr string)
+	SetupMiddlewares(handler http.Handler) http.Handler
+	SetupGlobalMiddleware(handler http.Handler) http.Handler
+}
+
 // NewServer creates a new api cars server but does not configure it
-func NewServer(api *operations.CarsAPI) *Server {
+func NewServer(api *operations.CarsAPI, configurator configurator) *Server {
 	s := new(Server)
 
 	s.shutdown = make(chan struct{})
 	s.api = api
 	s.interrupt = make(chan os.Signal, 1)
+	s.configurator = configurator
 	return s
 }
 
 // ConfigureAPI configures the API and handlers.
 func (s *Server) ConfigureAPI() {
 	if s.api != nil {
-		s.handler = configureAPI(s.api)
+		s.handler = s.configurator.ConfigureAPI(s.api)
 	}
 }
 
 // ConfigureFlags configures the additional flags defined by the handlers. Needs to be called before the parser.Parse
 func (s *Server) ConfigureFlags() {
 	if s.api != nil {
-		configureFlags(s.api)
+		s.configurator.ConfigureFlags(s.api)
 	}
 }
 
@@ -80,7 +90,7 @@ type Server struct {
 	ListenLimit  int           `long:"listen-limit" description:"limit the number of outstanding requests"`
 	KeepAlive    time.Duration `long:"keep-alive" description:"sets the TCP keep-alive timeouts on accepted connections. It prunes dead TCP connections ( e.g. closing laptop mid-download)" default:"3m"`
 	ReadTimeout  time.Duration `long:"read-timeout" description:"maximum duration before timing out read of the request" default:"30s"`
-	WriteTimeout time.Duration `long:"write-timeout" description:"maximum duration before timing out write of the response" default:"60s"`
+	WriteTimeout time.Duration `long:"write-timeout" description:"maximum duration before timing out write of the response" default:"30s"`
 	httpServerL  net.Listener
 
 	TLSHost           string         `long:"tls-host" description:"the IP to listen on for tls, when not specified it's the same as --host" env:"TLS_HOST"`
@@ -101,6 +111,7 @@ type Server struct {
 	shuttingDown int32
 	interrupted  bool
 	interrupt    chan os.Signal
+	configurator configurator
 }
 
 // Logf logs message either via defined user logger or via system one if no user logger is defined.
@@ -132,7 +143,7 @@ func (s *Server) SetAPI(api *operations.CarsAPI) {
 	}
 
 	s.api = api
-	s.handler = configureAPI(api)
+	s.handler = s.configurator.ConfigureAPI(api)
 }
 
 func (s *Server) hasScheme(scheme string) bool {
@@ -181,7 +192,7 @@ func (s *Server) Serve() (err error) {
 			domainSocket.IdleTimeout = s.CleanupTimeout
 		}
 
-		configureServer(domainSocket, "unix", string(s.SocketPath))
+		s.configurator.ConfigureServer(domainSocket, "unix", string(s.SocketPath))
 
 		servers = append(servers, domainSocket)
 		wg.Add(1)
@@ -211,7 +222,7 @@ func (s *Server) Serve() (err error) {
 
 		httpServer.Handler = s.handler
 
-		configureServer(httpServer, "http", s.httpServerL.Addr().String())
+		s.configurator.ConfigureServer(httpServer, "http", s.httpServerL.Addr().String())
 
 		servers = append(servers, httpServer)
 		wg.Add(1)
@@ -287,7 +298,7 @@ func (s *Server) Serve() (err error) {
 		}
 
 		// call custom TLS configurator
-		configureTLS(httpsServer.TLSConfig)
+		s.configurator.ConfigureTLS(httpsServer.TLSConfig)
 
 		if len(httpsServer.TLSConfig.Certificates) == 0 && httpsServer.TLSConfig.GetCertificate == nil {
 			// after standard and custom config are passed, this ends up with no certificate
@@ -304,7 +315,7 @@ func (s *Server) Serve() (err error) {
 			s.Fatalf("no certificate was configured for TLS")
 		}
 
-		configureServer(httpsServer, "https", s.httpsServerL.Addr().String())
+		s.configurator.ConfigureServer(httpsServer, "https", s.httpsServerL.Addr().String())
 
 		servers = append(servers, httpsServer)
 		wg.Add(1)
