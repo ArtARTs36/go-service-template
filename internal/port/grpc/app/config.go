@@ -15,7 +15,8 @@ type Config struct {
 }
 
 type GRPCConfig struct {
-	Port int `env:"PORT,required"`
+	Port          int  `env:"PORT,required"`
+	UseReflection bool `env:"USE_REFLECTION"`
 }
 
 // InitConfig func.

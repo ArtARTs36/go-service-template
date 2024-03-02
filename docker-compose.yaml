@@ -8,6 +8,7 @@ services:
       CARS_LOG_LEVEL: debug
       CARS_DB_DSN: "host=postgres user=root password=root dbname=cars sslmode=disable"
       CARS_GRPC_PORT: 8000
+      CARS_GRPC_USE_REFLECTION: true
     ports:
       - 8081:8000
     command:

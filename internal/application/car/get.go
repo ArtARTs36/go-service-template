@@ -3,6 +3,7 @@ package car
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/artarts36/go-service-template/internal/infrastructure/repository"
 
@@ -27,6 +28,10 @@ func (o *GetOperation) Get(ctx context.Context, params *GetOperationParams) (*do
 		if errors.Is(err, repository.ErrNotFound) {
 			return nil, ErrCarNotFound
 		}
+
+		slog.
+			With(slog.String("err", err.Error())).
+			ErrorContext(ctx, "unable to get car")
 
 		return nil, err
 	}

@@ -6,12 +6,14 @@ import (
 	"log/slog"
 	"net"
 
-	"github.com/artarts36/go-service-template/internal/config"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
+
+	"github.com/artarts36/go-service-template/internal/config"
 )
 
 type App struct {
@@ -50,6 +52,10 @@ func NewApp(
 	))
 
 	registerServices(gRPCServer, cont)
+
+	if cfg.GRPC.UseReflection {
+		reflection.Register(gRPCServer)
+	}
 
 	return &App{
 		gRPCServer: gRPCServer,
