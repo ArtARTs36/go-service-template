@@ -54,3 +54,6 @@ gen/go:
 	go generate ./...
 
 gen: gen/go gen/proto gen/swagger
+
+test:
+	go test ./...
