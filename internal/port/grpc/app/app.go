@@ -7,8 +7,6 @@ import (
 	"net"
 
 	"github.com/artarts36/go-service-template/internal/config"
-	"github.com/artarts36/go-service-template/internal/port/grpc/handlers/cars"
-	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"google.golang.org/grpc"
@@ -51,7 +49,7 @@ func NewApp(
 		logging.UnaryServerInterceptor(InterceptorLogger(), loggingOpts...),
 	))
 
-	carsapi.RegisterCarsServiceServer(gRPCServer, cars.NewService(cont))
+	registerServices(gRPCServer, cont)
 
 	return &App{
 		gRPCServer: gRPCServer,
