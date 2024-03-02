@@ -13,8 +13,6 @@ import (
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
 )
 
-//go:generate go-swagger generate server --target ../../generated --name Cars --spec ../../../../../api/openapi/openapi.yaml --template-dir ./swagger-templates/templates --principal interface{}
-
 type Configurator struct {
 }
 
