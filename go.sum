@@ -1,3 +1,7 @@
+github.com/artarts36/go-http-middlewares v0.0.0-20240302221121-a09bd0c3addd h1:dDX7JtflE2vBcEWEBOXtpVSssGQTGMavwe2fjqksIJk=
+github.com/artarts36/go-http-middlewares v0.0.0-20240302221121-a09bd0c3addd/go.mod h1:MsDG2xOUdepIgh892g/TAzfqYbhAMumY7krEQlJQ3HI=
+github.com/artarts36/go-http-middlewares v0.0.0-20240302221506-3200c51bc3bb h1:VJoPMird1J6s6lGelFFsTCmYPur0OdJ782FoLM3vTq0=
+github.com/artarts36/go-http-middlewares v0.0.0-20240302221506-3200c51bc3bb/go.mod h1:MsDG2xOUdepIgh892g/TAzfqYbhAMumY7krEQlJQ3HI=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/caarlos0/env/v10 v10.0.0 h1:yIHUBZGsyqCnpTkbjk8asUlx6RFhhEs+h7TOBdgdzXA=

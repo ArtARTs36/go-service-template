@@ -16,7 +16,10 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	application := app.NewApp(cfg)
+	application, err := app.NewApp(cfg)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	go func() {
 		if runErr := application.Run(); runErr != nil {

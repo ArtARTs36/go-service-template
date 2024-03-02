@@ -12,31 +12,31 @@ import (
 	grpc "google.golang.org/grpc"
 )
 
-// MockCarsClient is a mock of CarsClient interface.
-type MockCarsClient struct {
+// MockCarsServiceClient is a mock of CarsServiceClient interface.
+type MockCarsServiceClient struct {
 	ctrl     *gomock.Controller
-	recorder *MockCarsClientMockRecorder
+	recorder *MockCarsServiceClientMockRecorder
 }
 
-// MockCarsClientMockRecorder is the mock recorder for MockCarsClient.
-type MockCarsClientMockRecorder struct {
-	mock *MockCarsClient
+// MockCarsServiceClientMockRecorder is the mock recorder for MockCarsServiceClient.
+type MockCarsServiceClientMockRecorder struct {
+	mock *MockCarsServiceClient
 }
 
-// NewMockCarsClient creates a new mock instance.
-func NewMockCarsClient(ctrl *gomock.Controller) *MockCarsClient {
-	mock := &MockCarsClient{ctrl: ctrl}
-	mock.recorder = &MockCarsClientMockRecorder{mock}
+// NewMockCarsServiceClient creates a new mock instance.
+func NewMockCarsServiceClient(ctrl *gomock.Controller) *MockCarsServiceClient {
+	mock := &MockCarsServiceClient{ctrl: ctrl}
+	mock.recorder = &MockCarsServiceClientMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCarsClient) EXPECT() *MockCarsClientMockRecorder {
+func (m *MockCarsServiceClient) EXPECT() *MockCarsServiceClientMockRecorder {
 	return m.recorder
 }
 
 // Get mocks base method.
-func (m *MockCarsClient) Get(ctx context.Context, in *GetCarRequest, opts ...grpc.CallOption) (*Car, error) {
+func (m *MockCarsServiceClient) Get(ctx context.Context, in *GetCarRequest, opts ...grpc.CallOption) (*Car, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
@@ -49,37 +49,37 @@ func (m *MockCarsClient) Get(ctx context.Context, in *GetCarRequest, opts ...grp
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockCarsClientMockRecorder) Get(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockCarsServiceClientMockRecorder) Get(ctx, in interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCarsClient)(nil).Get), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCarsServiceClient)(nil).Get), varargs...)
 }
 
-// MockCarsServer is a mock of CarsServer interface.
-type MockCarsServer struct {
+// MockCarsServiceServer is a mock of CarsServiceServer interface.
+type MockCarsServiceServer struct {
 	ctrl     *gomock.Controller
-	recorder *MockCarsServerMockRecorder
+	recorder *MockCarsServiceServerMockRecorder
 }
 
-// MockCarsServerMockRecorder is the mock recorder for MockCarsServer.
-type MockCarsServerMockRecorder struct {
-	mock *MockCarsServer
+// MockCarsServiceServerMockRecorder is the mock recorder for MockCarsServiceServer.
+type MockCarsServiceServerMockRecorder struct {
+	mock *MockCarsServiceServer
 }
 
-// NewMockCarsServer creates a new mock instance.
-func NewMockCarsServer(ctrl *gomock.Controller) *MockCarsServer {
-	mock := &MockCarsServer{ctrl: ctrl}
-	mock.recorder = &MockCarsServerMockRecorder{mock}
+// NewMockCarsServiceServer creates a new mock instance.
+func NewMockCarsServiceServer(ctrl *gomock.Controller) *MockCarsServiceServer {
+	mock := &MockCarsServiceServer{ctrl: ctrl}
+	mock.recorder = &MockCarsServiceServerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCarsServer) EXPECT() *MockCarsServerMockRecorder {
+func (m *MockCarsServiceServer) EXPECT() *MockCarsServiceServerMockRecorder {
 	return m.recorder
 }
 
 // Get mocks base method.
-func (m *MockCarsServer) Get(arg0 context.Context, arg1 *GetCarRequest) (*Car, error) {
+func (m *MockCarsServiceServer) Get(arg0 context.Context, arg1 *GetCarRequest) (*Car, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", arg0, arg1)
 	ret0, _ := ret[0].(*Car)
@@ -88,54 +88,54 @@ func (m *MockCarsServer) Get(arg0 context.Context, arg1 *GetCarRequest) (*Car, e
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockCarsServerMockRecorder) Get(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCarsServiceServerMockRecorder) Get(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCarsServer)(nil).Get), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCarsServiceServer)(nil).Get), arg0, arg1)
 }
 
-// mustEmbedUnimplementedCarsServer mocks base method.
-func (m *MockCarsServer) mustEmbedUnimplementedCarsServer() {
+// mustEmbedUnimplementedCarsServiceServer mocks base method.
+func (m *MockCarsServiceServer) mustEmbedUnimplementedCarsServiceServer() {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "mustEmbedUnimplementedCarsServer")
+	m.ctrl.Call(m, "mustEmbedUnimplementedCarsServiceServer")
 }
 
-// mustEmbedUnimplementedCarsServer indicates an expected call of mustEmbedUnimplementedCarsServer.
-func (mr *MockCarsServerMockRecorder) mustEmbedUnimplementedCarsServer() *gomock.Call {
+// mustEmbedUnimplementedCarsServiceServer indicates an expected call of mustEmbedUnimplementedCarsServiceServer.
+func (mr *MockCarsServiceServerMockRecorder) mustEmbedUnimplementedCarsServiceServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedCarsServer", reflect.TypeOf((*MockCarsServer)(nil).mustEmbedUnimplementedCarsServer))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedCarsServiceServer", reflect.TypeOf((*MockCarsServiceServer)(nil).mustEmbedUnimplementedCarsServiceServer))
 }
 
-// MockUnsafeCarsServer is a mock of UnsafeCarsServer interface.
-type MockUnsafeCarsServer struct {
+// MockUnsafeCarsServiceServer is a mock of UnsafeCarsServiceServer interface.
+type MockUnsafeCarsServiceServer struct {
 	ctrl     *gomock.Controller
-	recorder *MockUnsafeCarsServerMockRecorder
+	recorder *MockUnsafeCarsServiceServerMockRecorder
 }
 
-// MockUnsafeCarsServerMockRecorder is the mock recorder for MockUnsafeCarsServer.
-type MockUnsafeCarsServerMockRecorder struct {
-	mock *MockUnsafeCarsServer
+// MockUnsafeCarsServiceServerMockRecorder is the mock recorder for MockUnsafeCarsServiceServer.
+type MockUnsafeCarsServiceServerMockRecorder struct {
+	mock *MockUnsafeCarsServiceServer
 }
 
-// NewMockUnsafeCarsServer creates a new mock instance.
-func NewMockUnsafeCarsServer(ctrl *gomock.Controller) *MockUnsafeCarsServer {
-	mock := &MockUnsafeCarsServer{ctrl: ctrl}
-	mock.recorder = &MockUnsafeCarsServerMockRecorder{mock}
+// NewMockUnsafeCarsServiceServer creates a new mock instance.
+func NewMockUnsafeCarsServiceServer(ctrl *gomock.Controller) *MockUnsafeCarsServiceServer {
+	mock := &MockUnsafeCarsServiceServer{ctrl: ctrl}
+	mock.recorder = &MockUnsafeCarsServiceServerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUnsafeCarsServer) EXPECT() *MockUnsafeCarsServerMockRecorder {
+func (m *MockUnsafeCarsServiceServer) EXPECT() *MockUnsafeCarsServiceServerMockRecorder {
 	return m.recorder
 }
 
-// mustEmbedUnimplementedCarsServer mocks base method.
-func (m *MockUnsafeCarsServer) mustEmbedUnimplementedCarsServer() {
+// mustEmbedUnimplementedCarsServiceServer mocks base method.
+func (m *MockUnsafeCarsServiceServer) mustEmbedUnimplementedCarsServiceServer() {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "mustEmbedUnimplementedCarsServer")
+	m.ctrl.Call(m, "mustEmbedUnimplementedCarsServiceServer")
 }
 
-// mustEmbedUnimplementedCarsServer indicates an expected call of mustEmbedUnimplementedCarsServer.
-func (mr *MockUnsafeCarsServerMockRecorder) mustEmbedUnimplementedCarsServer() *gomock.Call {
+// mustEmbedUnimplementedCarsServiceServer indicates an expected call of mustEmbedUnimplementedCarsServiceServer.
+func (mr *MockUnsafeCarsServiceServerMockRecorder) mustEmbedUnimplementedCarsServiceServer() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedCarsServer", reflect.TypeOf((*MockUnsafeCarsServer)(nil).mustEmbedUnimplementedCarsServer))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "mustEmbedUnimplementedCarsServiceServer", reflect.TypeOf((*MockUnsafeCarsServiceServer)(nil).mustEmbedUnimplementedCarsServiceServer))
 }

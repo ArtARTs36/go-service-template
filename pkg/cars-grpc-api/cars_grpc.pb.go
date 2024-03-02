@@ -19,89 +19,89 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Cars_Get_FullMethodName = "/artarts36.cars.v1.Cars/Get"
+	CarsService_Get_FullMethodName = "/artarts36.cars.v1.CarsService/Get"
 )
 
-// CarsClient is the client API for Cars service.
+// CarsServiceClient is the client API for CarsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type CarsClient interface {
+type CarsServiceClient interface {
 	Get(ctx context.Context, in *GetCarRequest, opts ...grpc.CallOption) (*Car, error)
 }
 
-type carsClient struct {
+type carsServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCarsClient(cc grpc.ClientConnInterface) CarsClient {
-	return &carsClient{cc}
+func NewCarsServiceClient(cc grpc.ClientConnInterface) CarsServiceClient {
+	return &carsServiceClient{cc}
 }
 
-func (c *carsClient) Get(ctx context.Context, in *GetCarRequest, opts ...grpc.CallOption) (*Car, error) {
+func (c *carsServiceClient) Get(ctx context.Context, in *GetCarRequest, opts ...grpc.CallOption) (*Car, error) {
 	out := new(Car)
-	err := c.cc.Invoke(ctx, Cars_Get_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, CarsService_Get_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CarsServer is the server API for Cars service.
-// All implementations must embed UnimplementedCarsServer
+// CarsServiceServer is the server API for CarsService service.
+// All implementations must embed UnimplementedCarsServiceServer
 // for forward compatibility
-type CarsServer interface {
+type CarsServiceServer interface {
 	Get(context.Context, *GetCarRequest) (*Car, error)
-	mustEmbedUnimplementedCarsServer()
+	mustEmbedUnimplementedCarsServiceServer()
 }
 
-// UnimplementedCarsServer must be embedded to have forward compatible implementations.
-type UnimplementedCarsServer struct {
+// UnimplementedCarsServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCarsServiceServer struct {
 }
 
-func (UnimplementedCarsServer) Get(context.Context, *GetCarRequest) (*Car, error) {
+func (UnimplementedCarsServiceServer) Get(context.Context, *GetCarRequest) (*Car, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedCarsServer) mustEmbedUnimplementedCarsServer() {}
+func (UnimplementedCarsServiceServer) mustEmbedUnimplementedCarsServiceServer() {}
 
-// UnsafeCarsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CarsServer will
+// UnsafeCarsServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CarsServiceServer will
 // result in compilation errors.
-type UnsafeCarsServer interface {
-	mustEmbedUnimplementedCarsServer()
+type UnsafeCarsServiceServer interface {
+	mustEmbedUnimplementedCarsServiceServer()
 }
 
-func RegisterCarsServer(s grpc.ServiceRegistrar, srv CarsServer) {
-	s.RegisterService(&Cars_ServiceDesc, srv)
+func RegisterCarsServiceServer(s grpc.ServiceRegistrar, srv CarsServiceServer) {
+	s.RegisterService(&CarsService_ServiceDesc, srv)
 }
 
-func _Cars_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CarsService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCarRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CarsServer).Get(ctx, in)
+		return srv.(CarsServiceServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Cars_Get_FullMethodName,
+		FullMethod: CarsService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarsServer).Get(ctx, req.(*GetCarRequest))
+		return srv.(CarsServiceServer).Get(ctx, req.(*GetCarRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Cars_ServiceDesc is the grpc.ServiceDesc for Cars service.
+// CarsService_ServiceDesc is the grpc.ServiceDesc for CarsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Cars_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "artarts36.cars.v1.Cars",
-	HandlerType: (*CarsServer)(nil),
+var CarsService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "artarts36.cars.v1.CarsService",
+	HandlerType: (*CarsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Get",
-			Handler:    _Cars_Get_Handler,
+			Handler:    _CarsService_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

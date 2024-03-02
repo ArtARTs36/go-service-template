@@ -1,9 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres
-	log "github.com/sirupsen/logrus"
+	"log/slog"
 
 	"github.com/artarts36/go-service-template/internal/application/car"
 	"github.com/artarts36/go-service-template/internal/domain"
@@ -27,23 +28,25 @@ type Container struct {
 	}
 }
 
-func InitContainer(conf *Config) *Container {
+func InitContainer(conf *Config) (*Container, error) {
 	cont := &Container{}
 	cont.setupLogger(&conf.Log)
 
+	slog.Debug("[container] connecting to db")
+
 	db, err := sqlx.Connect("postgres", conf.DB.DSN)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, fmt.Errorf("failed to connecting to db: %s", err)
 	}
 
-	log.Debug("[container] connected to db")
+	slog.Debug("[container] connected to db")
 
 	cont.Infrastructure.DB = db
 
 	cont.initRepositories()
 	cont.initOperations()
 
-	return cont
+	return cont, nil
 }
 
 func (c *Container) initRepositories() {

@@ -6,13 +6,11 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	middlewares "github.com/artarts36/go-http-middlewares"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
-
-	"github.com/artarts36/go-service-template/internal/port/http/middlewares"
 )
 
 //go:generate go-swagger generate server --target ../../generated --name Cars --spec ../../../../../api/openapi/openapi.yaml --template-dir ./swagger-templates/templates --principal interface{}
@@ -32,12 +30,6 @@ func (c *Configurator) ConfigureAPI(api *operations.CarsAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
-	// Set your custom logger if needed. Default one is log.Printf
-	// Expected interface func(string, ...interface{})
-	//
-	// Example:
-	// api.Logger = log.Printf
-
 	api.UseSwaggerUI()
 	// To continue using redoc as your UI, uncomment the following line
 	// api.UseRedoc()
@@ -46,14 +38,7 @@ func (c *Configurator) ConfigureAPI(api *operations.CarsAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.GetCarsIDHandler == nil {
-		api.GetCarsIDHandler = operations.GetCarsIDHandlerFunc(func(params operations.GetCarsIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetCarsID has not yet been implemented")
-		})
-	}
-
 	api.PreServerShutdown = func() {}
-
 	api.ServerShutdown = func() {}
 
 	return c.SetupGlobalMiddleware(api.Serve(c.SetupMiddlewares))
@@ -82,5 +67,5 @@ func (c *Configurator) SetupMiddlewares(handler http.Handler) http.Handler {
 // This middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics.
 func (c *Configurator) SetupGlobalMiddleware(handler http.Handler) http.Handler {
-	return middlewares.NewLog(handler)
+	return middlewares.LogWithReqIDFromHeaderOrUUID(handler)
 }

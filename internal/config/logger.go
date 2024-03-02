@@ -1,21 +1,26 @@
 package config
 
 import (
+	"log/slog"
 	"os"
-
-	log "github.com/sirupsen/logrus"
 )
 
 func (c *Container) setupLogger(conf *LogConfig) {
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetOutput(os.Stdout)
+	var level slog.Level
 
-	lvl, err := log.ParseLevel(conf.Level)
-	if err != nil {
-		log.Warnf("log level \"%s\" unsupported", conf.Level)
-
-		lvl = log.DebugLevel
+	if conf.Level == "info" {
+		level = slog.LevelInfo
+	} else if conf.Level == "warn" || conf.Level == "warning" {
+		level = slog.LevelWarn
+	} else if conf.Level == "error" || conf.Level == "err" {
+		level = slog.LevelError
+	} else {
+		level = slog.LevelDebug
 	}
 
-	log.SetLevel(lvl)
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: level,
+	}))
+
+	slog.SetDefault(logger)
 }

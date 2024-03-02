@@ -16,27 +16,27 @@ import (
 )
 
 type MockClient struct {
-	Client   *Client
-	recorder *MockClientMockRecorder
-	MockCars *MockCarsClient
+	Client          *Client
+	recorder        *MockClientMockRecorder
+	MockCarsService *MockCarsServiceClient
 }
 
 type MockClientMockRecorder struct {
-	*MockCarsClientMockRecorder
+	*MockCarsServiceClientMockRecorder
 }
 
 func NewMockClient(ctrl *gomock.Controller) *MockClient {
 	mockClient := &MockClient{
-		MockCars: NewMockCarsClient(ctrl),
+		MockCarsService: NewMockCarsServiceClient(ctrl),
 	}
 
 	mockClient.recorder = &MockClientMockRecorder{
-		MockCarsClientMockRecorder: mockClient.MockCars.recorder,
+		MockCarsServiceClientMockRecorder: mockClient.MockCarsService.recorder,
 	}
 
 	mockClient.Client = &Client{
-		conn:       nil,
-		CarsClient: mockClient.MockCars,
+		conn:              nil,
+		CarsServiceClient: mockClient.MockCarsService,
 	}
 
 	return mockClient
@@ -47,9 +47,9 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 }
 
 type MockServer struct {
-	Cars     *MockCarsServer
-	Server   *grpc.Server
-	Listener net.Listener
+	CarsService *MockCarsServiceServer
+	Server      *grpc.Server
+	Listener    net.Listener
 }
 
 func (m *MockServer) Close() error {
@@ -59,8 +59,8 @@ func (m *MockServer) Close() error {
 
 func NewMockServer(ctrl *gomock.Controller, cfg *Config, opts ...grpc.ServerOption) (*MockServer, error) {
 	s := &MockServer{
-		Server: grpc.NewServer(opts...),
-		Cars:   NewMockCarsServer(ctrl),
+		Server:      grpc.NewServer(opts...),
+		CarsService: NewMockCarsServiceServer(ctrl),
 	}
 
 	l, err := net.Listen("tcp", cfg.Host)
@@ -69,6 +69,6 @@ func NewMockServer(ctrl *gomock.Controller, cfg *Config, opts ...grpc.ServerOpti
 	}
 
 	s.Listener = l
-	RegisterCarsServer(s.Server, s.Cars)
+	RegisterCarsServiceServer(s.Server, s.CarsService)
 	return s, nil
 }

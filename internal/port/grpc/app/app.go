@@ -9,8 +9,6 @@ import (
 	"github.com/artarts36/go-service-template/internal/config"
 	"github.com/artarts36/go-service-template/internal/port/grpc/handlers/cars"
 	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api"
-	log "github.com/sirupsen/logrus"
-
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"google.golang.org/grpc"
@@ -26,8 +24,11 @@ type App struct {
 // NewApp creates new gRPC server app.
 func NewApp(
 	cfg *Config,
-) *App {
-	cont := config.InitContainer(&cfg.Config)
+) (*App, error) {
+	cont, err := config.InitContainer(&cfg.Config)
+	if err != nil {
+		return nil, err
+	}
 
 	loggingOpts := []logging.Option{
 		logging.WithLogOnEvents(
@@ -39,7 +40,7 @@ func NewApp(
 
 	recoveryOpts := []recovery.Option{
 		recovery.WithRecoveryHandler(func(p interface{}) error {
-			log.Error("Recovered from panic", slog.Any("panic", p))
+			slog.Error("Recovered from panic", slog.Any("panic", p))
 
 			return status.Errorf(codes.Internal, "internal error")
 		}),
@@ -50,19 +51,19 @@ func NewApp(
 		logging.UnaryServerInterceptor(InterceptorLogger(), loggingOpts...),
 	))
 
-	carsapi.RegisterCarsServer(gRPCServer, cars.NewService(cont))
+	carsapi.RegisterCarsServiceServer(gRPCServer, cars.NewService(cont))
 
 	return &App{
 		gRPCServer: gRPCServer,
 		port:       cfg.GRPC.Port,
-	}
+	}, nil
 }
 
 // InterceptorLogger adapts slog logger to interceptor logger.
 // This code is simple enough to be copied and not imported.
 func InterceptorLogger() logging.Logger {
 	return logging.LoggerFunc(func(ctx context.Context, lvl logging.Level, msg string, fields ...any) {
-		log.WithContext(ctx).Info(msg)
+		slog.InfoContext(ctx, msg)
 	})
 }
 
@@ -75,7 +76,7 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	log.Info("grpc server started")
+	slog.Info("[grpc] grpc server started")
 
 	if serveErr := a.gRPCServer.Serve(l); serveErr != nil {
 		return fmt.Errorf("%s: %w", op, serveErr)
@@ -86,7 +87,7 @@ func (a *App) Run() error {
 
 // Stop stops gRPC server.
 func (a *App) Stop() {
-	log.Info("[grpc][app] stopping gRPC server")
+	slog.Info("[grpc] stopping gRPC server")
 
 	a.gRPCServer.GracefulStop()
 }

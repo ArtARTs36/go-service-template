@@ -1,8 +1,10 @@
 package main
 
 import (
+	"log"
+	"log/slog"
+
 	"github.com/go-openapi/loads"
-	log "github.com/sirupsen/logrus"
 
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi"
 	apiOperations "github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
@@ -14,15 +16,21 @@ import (
 func main() {
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
 	if err != nil {
-		log.Fatalln(err)
+		slog.Error(err.Error())
+		panic(err)
 	}
 
 	cfg, err := app.InitConfig("CARS_")
 	if err != nil {
+		slog.Error(err.Error())
+		panic(err)
+	}
+
+	srv, err := app.New(cfg)
+	if err != nil {
 		log.Fatalln(err)
 	}
 
-	srv := app.New(cfg)
 	api := apiOperations.NewCarsAPI(swaggerSpec)
 
 	api.GetCarsIDHandler = apiOperations.GetCarsIDHandlerFunc(srv.GetCarsIDHandler)
@@ -31,16 +39,14 @@ func main() {
 	defer func() {
 		shutdownErr := server.Shutdown()
 		if shutdownErr != nil {
-			log.Error(shutdownErr)
+			slog.Error(shutdownErr.Error())
 		}
 	}()
 
 	server.ConfigureAPI()
 
-	api.Logger = log.Debugf
-
 	server.Port = cfg.HTTP.Port
 	if serveErr := server.Serve(); serveErr != nil {
-		log.Error(serveErr)
+		slog.Error(serveErr.Error())
 	}
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type Service struct {
-	carsapi.UnimplementedCarsServer
+	carsapi.UnimplementedCarsServiceServer
 
 	container *config.Container
 }

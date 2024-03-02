@@ -8,7 +8,7 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"os"
@@ -114,24 +114,11 @@ type Server struct {
 	configurator configurator
 }
 
-// Logf logs message either via defined user logger or via system one if no user logger is defined.
-func (s *Server) Logf(f string, args ...interface{}) {
-	if s.api != nil && s.api.Logger != nil {
-		s.api.Logger(f, args...)
-	} else {
-		log.Printf(f, args...)
-	}
-}
-
 // Fatalf logs message either via defined user logger or via system one if no user logger is defined.
 // Exits with non-zero status after printing
 func (s *Server) Fatalf(f string, args ...interface{}) {
-	if s.api != nil && s.api.Logger != nil {
-		s.api.Logger(f, args...)
-		os.Exit(1)
-	} else {
-		log.Fatalf(f, args...)
-	}
+	slog.Info(fmt.Sprintf(f, args...))
+	os.Exit(1)
 }
 
 // SetAPI configures the server with the specified API. Needs to be called before Serve
@@ -196,13 +183,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, domainSocket)
 		wg.Add(1)
-		s.Logf("Serving cars at unix://%s", s.SocketPath)
+		slog.Info(fmt.Sprintf("Serving cars at unix://%s", s.SocketPath))
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := domainSocket.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving cars at unix://%s", s.SocketPath)
+			slog.Info(fmt.Sprintf("Stopped serving cars at unix://%s", s.SocketPath))
 		}(s.domainSocketL)
 	}
 
@@ -226,13 +213,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, httpServer)
 		wg.Add(1)
-		s.Logf("Serving cars at http://%s", s.httpServerL.Addr())
+		slog.Info(fmt.Sprintf("Serving cars at http://%s", s.httpServerL.Addr()))
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving cars at http://%s", l.Addr())
+			slog.Info(fmt.Sprintf("Stopped serving cars at http://%s", l.Addr()))
 		}(s.httpServerL)
 	}
 
@@ -319,13 +306,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, httpsServer)
 		wg.Add(1)
-		s.Logf("Serving cars at https://%s", s.httpsServerL.Addr())
+		slog.Info(fmt.Sprintf("Serving cars at https://%s", s.httpsServerL.Addr()))
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := httpsServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving cars at https://%s", l.Addr())
+			slog.Info(fmt.Sprintf("Stopped serving cars at https://%s", l.Addr()))
 		}(tls.NewListener(s.httpsServerL, httpsServer.TLSConfig))
 	}
 
@@ -440,7 +427,9 @@ func (s *Server) handleShutdown(wg *sync.WaitGroup, serversPtr *[]*http.Server) 
 			}()
 			if err := server.Shutdown(ctx); err != nil {
 				// Error from closing listeners, or context timeout:
-				s.Logf("HTTP server Shutdown: %v", err)
+				slog.
+					With(slog.String("err", err.Error())).
+					Info("HTTP server Shutdown")
 			} else {
 				success = true
 			}
@@ -501,13 +490,15 @@ func handleInterrupt(once *sync.Once, s *Server) {
 	once.Do(func() {
 		for range s.interrupt {
 			if s.interrupted {
-				s.Logf("Server already shutting down")
+				slog.Info("Server already shutting down")
 				continue
 			}
 			s.interrupted = true
-			s.Logf("Shutting down... ")
+			slog.Info("[http] Shutting down...")
 			if err := s.Shutdown(); err != nil {
-				s.Logf("HTTP server Shutdown: %v", err)
+				slog.
+					With(slog.String("err", err.Error())).
+					Info("HTTP server Shutdown")
 			}
 		}
 	})

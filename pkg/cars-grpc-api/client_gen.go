@@ -17,12 +17,12 @@ import (
 
 type ClientInterface interface {
 	Close() error
-	CarsClient
+	CarsServiceClient
 }
 
 type Client struct {
 	conn grpcConn
-	CarsClient
+	CarsServiceClient
 }
 
 /*
@@ -79,7 +79,7 @@ func NewClient(ctx context.Context, cfg Config, opts ...grpc.DialOption) (*Clien
 
 	client := &Client{
 		conn,
-		NewCarsClient(conn),
+		NewCarsServiceClient(conn),
 	}
 	return client, nil
 }

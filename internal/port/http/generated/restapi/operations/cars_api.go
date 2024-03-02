@@ -98,9 +98,6 @@ type CarsAPI struct {
 
 	// Custom command line argument groups with their descriptions
 	CommandLineOptionsGroups []swag.CommandLineOptionsGroup
-
-	// User defined logger function.
-	Logger func(string, ...interface{})
 }
 
 // UseRedoc for documentation at /docs
