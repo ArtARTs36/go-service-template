@@ -3,7 +3,7 @@ module github.com/artarts36/go-service-template
 go 1.21.0
 
 require (
-	github.com/artarts36/go-http-middlewares v0.1.0
+	github.com/artarts36/go-http-middlewares v0.1.1
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/loads v0.21.3
