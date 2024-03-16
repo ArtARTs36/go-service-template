@@ -8,13 +8,16 @@ import (
 func (c *Container) setupLogger(conf *LogConfig) {
 	var level slog.Level
 
-	if conf.Level == "info" {
+	switch conf.Level {
+	case "info":
 		level = slog.LevelInfo
-	} else if conf.Level == "warn" || conf.Level == "warning" {
+	case "warning":
+	case "warn":
 		level = slog.LevelWarn
-	} else if conf.Level == "error" || conf.Level == "err" {
+	case "error":
+	case "err":
 		level = slog.LevelError
-	} else {
+	default:
 		level = slog.LevelDebug
 	}
 

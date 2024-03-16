@@ -2,9 +2,10 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres
-	"log/slog"
 
 	"github.com/artarts36/go-service-template/internal/application/car"
 	"github.com/artarts36/go-service-template/internal/domain"
