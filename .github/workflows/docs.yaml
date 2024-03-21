@@ -1,5 +1,7 @@
 name: Generate documentation
 
+permissions: write-all
+
 on:
   push:
     branches:
