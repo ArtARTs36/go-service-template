@@ -1,9 +1,9 @@
-github.com/artarts36/go-http-middlewares v0.1.1 h1:ZwmbHLipFM63S9Z9Y09HsZBV16MIjx5Q1O/2ZbH4ymI=
-github.com/artarts36/go-http-middlewares v0.1.1/go.mod h1:MsDG2xOUdepIgh892g/TAzfqYbhAMumY7krEQlJQ3HI=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/caarlos0/env/v10 v10.0.0 h1:yIHUBZGsyqCnpTkbjk8asUlx6RFhhEs+h7TOBdgdzXA=
 github.com/caarlos0/env/v10 v10.0.0/go.mod h1:ZfulV76NvVPw3tm591U4SwL3Xx9ldzBP9aGxzeN7G18=
+github.com/cappuccinotm/slogx v1.3.0 h1:1kkmKLLqfByZDuS+SXZZHfl6Skez/ASKAzHN+OI37w0=
+github.com/cappuccinotm/slogx v1.3.0/go.mod h1:Q9lmOfumtErQpVTT5/3nKH++YRJMrYNvGe7Xkqnjr2Q=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

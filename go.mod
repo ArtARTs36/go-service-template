@@ -3,8 +3,8 @@ module github.com/artarts36/go-service-template
 go 1.21.0
 
 require (
-	github.com/artarts36/go-http-middlewares v0.1.1
 	github.com/caarlos0/env/v10 v10.0.0
+	github.com/cappuccinotm/slogx v1.3.0
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/loads v0.21.3
 	github.com/go-openapi/runtime v0.27.1
@@ -12,6 +12,7 @@ require (
 	github.com/go-openapi/strfmt v0.22.1
 	github.com/go-openapi/swag v0.22.9
 	github.com/golang/mock v1.6.0
+	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/jmoiron/sqlx v1.3.5
@@ -31,7 +32,6 @@ require (
 	github.com/go-openapi/jsonreference v0.20.3 // indirect
 	github.com/go-openapi/validate v0.22.4 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

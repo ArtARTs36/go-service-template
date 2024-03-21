@@ -6,11 +6,11 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	middlewares "github.com/artarts36/go-http-middlewares"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 
 	"github.com/artarts36/go-service-template/internal/port/http/generated/restapi/operations"
+	"github.com/artarts36/go-service-template/internal/port/http/middlewares"
 )
 
 type Configurator struct {
@@ -65,5 +65,5 @@ func (c *Configurator) SetupMiddlewares(handler http.Handler) http.Handler {
 // This middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics.
 func (c *Configurator) SetupGlobalMiddleware(handler http.Handler) http.Handler {
-	return middlewares.LogWithReqIDFromHeaderOrUUID(handler)
+	return middlewares.NewLog(handler)
 }
