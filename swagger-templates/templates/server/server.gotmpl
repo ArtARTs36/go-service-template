@@ -168,8 +168,8 @@ func intEnvOverride(orig int, def int, keys ...string) int {
 {{ end }}
 
 type configurator interface {
-	ConfigureFlags(api *operations.CarsAPI)
-	ConfigureAPI(api *operations.CarsAPI) http.Handler
+	ConfigureFlags(api *{{.APIPackageAlias}}.{{ pascalize .Name }}API)
+	ConfigureAPI(api *{{.APIPackageAlias}}.{{ pascalize .Name }}API) http.Handler
 	ConfigureTLS(tlsConfig *tls.Config)
 	ConfigureServer(s *http.Server, scheme, addr string)
 	SetupMiddlewares(handler http.Handler) http.Handler
