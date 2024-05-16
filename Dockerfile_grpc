@@ -1,0 +1,25 @@
+# syntax=docker/dockerfile:1
+
+FROM golang:1.21-alpine AS builder
+
+ARG APP_VERSION="undefined"
+ARG BUILD_TIME="undefined"
+
+WORKDIR /go/src/github.com/artarts36/go-service-template
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X 'main.Version=${APP_VERSION}' -X 'main.BuildDate=${BUILD_TIME}'" -o /go/bin/cars /go/src/github.com/artarts36/go-service-template/cmd/grpc/main.go
+
+######################################################
+
+FROM alpine
+
+COPY --from=builder /go/bin/cars /go/bin/cars
+
+EXPOSE 8000
+
+CMD ["/go/bin/cars"]

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package artarts36.cars.v1;
+
+option go_package = "github.com/artarts36/go-service-template/pkg/cars-grpc-api/v1;carsapi";
+
+service CarsService {
+  rpc Get (GetCarRequest) returns (Car);
+}
+
+message GetCarRequest {
+  int64 id = 1;
+}
+
+message Car {
+  int64 id = 1;
+}

@@ -1,0 +1,6 @@
+FROM artsafin/goose-migrations
+
+COPY ./migrations /migrations
+
+# using with env GOOSE_DBSTRING=dsn and GOOSE_DRIVER=postgres
+ENTRYPOINT ["goose", "up"]

@@ -1,0 +1,98 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2 # Action page: <https://github.com/docker/setup-qemu-action>
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2 # Action page: <https://github.com/docker/setup-buildx-action>
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_REGISTRY_LOGIN }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+      - name: Build gRPC image
+        uses: docker/build-push-action@v4 # Action page: <https://github.com/docker/build-push-action>
+        with:
+          context: .
+          file: Dockerfile_grpc
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME }}/go-service-template/cars-grpc:latest
+
+      - name: Build HTTP image
+        uses: docker/build-push-action@v4 # Action page: <https://github.com/docker/build-push-action>
+        with:
+          context: .
+          file: Dockerfile_http
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME }}/go-service-template/cars-http:latest
+
+      - name: Build migrations image
+        uses: docker/build-push-action@v4 # Action page: <https://github.com/docker/build-push-action>
+        with:
+          context: .
+          file: Dockerfile_migrations
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME }}/go-service-template/cars-migrations:latest
+            
+      - name: Send notification about failed build
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🔻 {{ github.repository }} build failed on tag ${{ github.event.release.tag_name }}
+
+            🌐 Url to failed job: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+
+    steps:
+      - name: Deploy
+        run: echo "deployed"
+
+      - if: ${{ failure() }}
+        name: Send notification about failed deploy
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🔻 ${{ github.repository }} deploy failed on tag ${{ github.event.release.tag_name }}
+
+            🔗 Commit url: ${{ github.event.head_commit.url }}
+
+            🌐 Url to failed job: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - if: ${{ success() }}
+        name: Send notification about succeed deploy
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            💚 ${{ github.repository }} deploy succeed on tag ${{ github.event.release.tag_name }}
