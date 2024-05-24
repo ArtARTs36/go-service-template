@@ -32,7 +32,7 @@ func NewApp(
 
 	loggingOpts := []logging.Option{
 		logging.WithLogOnEvents(
-			// logging.StartCall, logging.FinishCall,
+			logging.StartCall, logging.FinishCall,
 			logging.PayloadReceived, logging.PayloadSent,
 		),
 		// Add any other option (check functions starting with logging.With).
@@ -47,6 +47,7 @@ func NewApp(
 	}
 
 	gRPCServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
+		injectRequestID(),
 		recovery.UnaryServerInterceptor(recoveryOpts...),
 		logging.UnaryServerInterceptor(InterceptorLogger(), loggingOpts...),
 	))
@@ -67,7 +68,16 @@ func NewApp(
 // This code is simple enough to be copied and not imported.
 func InterceptorLogger() logging.Logger {
 	return logging.LoggerFunc(func(ctx context.Context, lvl logging.Level, msg string, fields ...any) {
-		slog.InfoContext(ctx, msg)
+		switch lvl {
+		case logging.LevelDebug:
+			slog.DebugContext(ctx, msg, fields...)
+		case logging.LevelInfo:
+			slog.InfoContext(ctx, msg, fields...)
+		case logging.LevelWarn:
+			slog.WarnContext(ctx, msg, fields...)
+		case logging.LevelError:
+			slog.ErrorContext(ctx, msg, fields...)
+		}
 	})
 }
 

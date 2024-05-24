@@ -3,9 +3,30 @@ package config
 import (
 	"log/slog"
 	"os"
+
+	"github.com/cappuccinotm/slogx"
+	"github.com/cappuccinotm/slogx/slogm"
 )
 
-func (c *Container) setupLogger(conf *LogConfig) {
+func (c *Container) setupLogger(conf Log) {
+	handler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+		Level: c.mapLogLevel(conf),
+	})
+
+	logger := slog.New(
+		slogx.Accumulator(
+			slogx.NewChain(
+				handler,
+				slogm.RequestID(),
+				slogm.StacktraceOnError(),
+			),
+		),
+	)
+
+	slog.SetDefault(logger)
+}
+
+func (c *Container) mapLogLevel(conf Log) slog.Level {
 	var level slog.Level
 
 	switch conf.Level {
@@ -21,9 +42,5 @@ func (c *Container) setupLogger(conf *LogConfig) {
 		level = slog.LevelDebug
 	}
 
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: level,
-	}))
-
-	slog.SetDefault(logger)
+	return level
 }

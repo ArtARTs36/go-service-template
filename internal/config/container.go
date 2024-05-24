@@ -31,7 +31,7 @@ type Container struct {
 
 func InitContainer(conf *Config) (*Container, error) {
 	cont := &Container{}
-	cont.setupLogger(&conf.Log)
+	cont.setupLogger(conf.Log)
 
 	slog.Debug("[container] connecting to db")
 
