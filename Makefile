@@ -28,20 +28,6 @@ migration/add-table: ## Create migration for add table, usage as: make migration
 migration/migrate: ## Migrate database schema
 	docker-compose run migrations
 
-gen/swagger: ## Generate Swagger structures
-	@rm -rf ./cmd/http
-	@mkdir -p ./cmd/http
-
-	@rm -rf ./internal/port/http/generated
-	@mkdir -p ./internal/port/http/generated
-
-	@go-swagger generate server \
-		-f ./api/http/openapi.yaml \
-		-t ./internal/port/http/generated \
-		-C ./swagger-templates/default-server.yml \
-		--template-dir ./swagger-templates/templates \
-		--name ${SERVICE_NAME}
-
 gen/proto: ## Generate gRPC structures
 	mkdir -p ${PROTO_OUT_DIR}
 	protoc \
@@ -55,10 +41,9 @@ gen/proto: ## Generate gRPC structures
 gen/go: ## Generate go/mock structures
 	go generate ./...
 
-gen: ## Generate go/mock, gRPC and Swagger structures
+gen: ## Generate go/mock, gRPC structures
 	make gen/go
 	make gen/proto
-	make gen/swagger
 
 test: ## Run go tests
 	go test ./...
