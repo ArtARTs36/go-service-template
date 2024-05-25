@@ -6,24 +6,28 @@ import (
 
 	"github.com/cappuccinotm/slogx"
 	"github.com/cappuccinotm/slogx/slogm"
+	"github.com/getsentry/sentry-go"
+	slogmulti "github.com/samber/slog-multi"
+	slogsentry "github.com/samber/slog-sentry/v2"
 )
 
 func (c *Container) setupLogger(conf Log) {
-	handler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+	jsonHandler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
 		Level: c.mapLogLevel(conf),
 	})
 
-	logger := slog.New(
-		slogx.Accumulator(
-			slogx.NewChain(
-				handler,
-				slogm.RequestID(),
-				slogm.StacktraceOnError(),
-			),
-		),
-	)
+	handlers := []slog.Handler{
+		slogx.NewChain(jsonHandler, slogm.RequestID(), slogm.StacktraceOnError()),
+	}
 
-	slog.SetDefault(logger)
+	if c.initSentry(conf) {
+		handlers = append(handlers, slogsentry.Option{
+			Level:     slog.LevelWarn,
+			AddSource: true,
+		}.NewSentryHandler())
+	}
+
+	slog.SetDefault(slog.New(slogmulti.Fanout(handlers...)))
 }
 
 func (c *Container) mapLogLevel(conf Log) slog.Level {
@@ -43,4 +47,19 @@ func (c *Container) mapLogLevel(conf Log) slog.Level {
 	}
 
 	return level
+}
+
+func (c *Container) initSentry(conf Log) bool {
+	sentryInitErr := sentry.Init(sentry.ClientOptions{
+		Dsn:           conf.Sentry.DSN,
+		EnableTracing: false,
+	})
+	if sentryInitErr != nil {
+		slog.
+			With(slog.String("err", sentryInitErr.Error())).
+			Error("failed to init sentry")
+	}
+	defer sentry.Flush(conf.Sentry.FlushTimeout)
+
+	return sentryInitErr == nil
 }

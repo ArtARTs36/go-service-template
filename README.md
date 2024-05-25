@@ -2,6 +2,6 @@
 
 features:
 - gRPC Server
-- Logging
+- Logging / Sentry
 - Auto generation documentation for database schema
 - Release workflow
