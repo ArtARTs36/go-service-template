@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/artarts36/go-service-template/internal/port/grpc/app"
 )
@@ -40,7 +39,11 @@ func main() {
 	}
 
 	go func() {
-		time.Sleep(1 * time.Minute)
+		if appRunErr := application.Run(); appRunErr != nil {
+			slog.
+				With(slog.Any("err", appRunErr.Error())).
+				Error("[main] failed to run application")
+		}
 	}()
 
 	// Graceful shutdown
