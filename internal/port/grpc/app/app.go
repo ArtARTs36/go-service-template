@@ -3,15 +3,14 @@ package app
 import (
 	"context"
 	"fmt"
-	"log/slog"
-	"net"
-
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
+	"log/slog"
+	"net"
 
 	"github.com/artarts36/go-service-template/internal/config"
 )
@@ -42,7 +41,9 @@ func NewApp(
 
 	recoveryOpts := []recovery.Option{
 		recovery.WithRecoveryHandler(func(p interface{}) error {
-			slog.Error("Recovered from panic", slog.Any("panic", p))
+			slog.
+				With(slog.Any("err", fmt.Errorf("%v", p))).
+				Error("[app] recovered from panic")
 
 			return status.Errorf(codes.Internal, "internal error")
 		}),
