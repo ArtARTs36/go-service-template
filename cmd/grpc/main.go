@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/artarts36/go-service-template/internal/port/grpc/app"
-
-	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -34,7 +32,11 @@ func main() {
 
 	application, err := app.NewApp(cfg, Version)
 	if err != nil {
-		log.Fatalln(err)
+		slog.
+			With(slog.Any("err", err)).
+			Error("[main] failed to initialize application")
+
+		os.Exit(1)
 	}
 
 	go func() {
