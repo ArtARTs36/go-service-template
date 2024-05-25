@@ -32,6 +32,8 @@ jobs:
           file: Dockerfile_grpc
           push: true
           platforms: linux/amd64
+          build-args: |
+            APP_VERSION=$(echo ${GITHUB_REF##*/} | sed -e 's/^[vV ]*//')
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME }}/go-service-template/cars-grpc:latest
 
