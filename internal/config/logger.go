@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"log/slog"
 	"os"
 
@@ -24,6 +25,24 @@ func (c *Container) setupLogger(conf Log) {
 		handlers = append(handlers, slogsentry.Option{
 			Level:     slog.LevelWarn,
 			AddSource: true,
+			AttrFromContext: []func(ctx context.Context) []slog.Attr{
+				func(_ context.Context) []slog.Attr {
+					return []slog.Attr{
+						slog.String("release", c.appVersion),
+					}
+				},
+				func(ctx context.Context) []slog.Attr {
+					reqID, ok := slogm.RequestIDFromContext(ctx)
+					if ok {
+						return []slog.Attr{slog.Group(
+							"tags",
+							slog.String("request_id", reqID),
+						)}
+					}
+
+					return []slog.Attr{}
+				},
+			},
 		}.NewSentryHandler())
 	}
 

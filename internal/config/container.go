@@ -27,10 +27,14 @@ type Container struct {
 			CarRepository domain.CarRepository
 		}
 	}
+
+	appVersion string
 }
 
-func InitContainer(conf *Config) (*Container, error) {
-	cont := &Container{}
+func InitContainer(conf *Config, version string) (*Container, error) {
+	cont := &Container{
+		appVersion: version,
+	}
 	cont.setupLogger(conf.Log)
 
 	slog.Debug("[container] connecting to db")

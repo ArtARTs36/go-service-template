@@ -25,8 +25,9 @@ type App struct {
 // NewApp creates new gRPC server app.
 func NewApp(
 	cfg *Config,
+	version string,
 ) (*App, error) {
-	cont, err := config.InitContainer(&cfg.Config)
+	cont, err := config.InitContainer(&cfg.Config, version)
 	if err != nil {
 		return nil, err
 	}

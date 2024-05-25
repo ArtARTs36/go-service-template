@@ -12,6 +12,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var (
+	Version = "0.1.0" //nolint: gochecknoglobals // version is need
+)
+
 func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
@@ -28,7 +32,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	application, err := app.NewApp(cfg)
+	application, err := app.NewApp(cfg, Version)
 	if err != nil {
 		log.Fatalln(err)
 	}
