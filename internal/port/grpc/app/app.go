@@ -19,6 +19,7 @@ import (
 type App struct {
 	gRPCServer *grpc.Server
 	port       int
+	container  *config.Container
 }
 
 // NewApp creates new gRPC server app.
@@ -61,6 +62,7 @@ func NewApp(
 	return &App{
 		gRPCServer: gRPCServer,
 		port:       cfg.GRPC.Port,
+		container:  cont,
 	}, nil
 }
 
@@ -90,7 +92,7 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	slog.Info("[grpc] grpc server started")
+	slog.Info("[app] grpc server started")
 
 	if serveErr := a.gRPCServer.Serve(l); serveErr != nil {
 		return fmt.Errorf("%s: %w", op, serveErr)
@@ -101,7 +103,15 @@ func (a *App) Run() error {
 
 // Stop stops gRPC server.
 func (a *App) Stop() {
-	slog.Info("[grpc] stopping gRPC server")
+	slog.Info("[app] stopping gRPC server")
 
 	a.gRPCServer.GracefulStop()
+
+	slog.Info("[app] closing db")
+
+	if err := a.container.Infrastructure.DB.Close(); err != nil {
+		slog.
+			With(slog.Any("err", err)).
+			Error("[app] failed to close db")
+	}
 }

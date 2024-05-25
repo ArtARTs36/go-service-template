@@ -1,9 +1,11 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/artarts36/go-service-template/internal/port/grpc/app"
 
@@ -11,9 +13,19 @@ import (
 )
 
 func main() {
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})))
+
+	slog.Info("[main] starting")
+
 	cfg, err := app.InitConfig("CARS_")
 	if err != nil {
-		log.Fatalln(err)
+		slog.
+			With(slog.Any("err", err)).
+			Error("[main] failed to initialize config")
+
+		os.Exit(1)
 	}
 
 	application, err := app.NewApp(cfg)
@@ -22,9 +34,7 @@ func main() {
 	}
 
 	go func() {
-		if runErr := application.Run(); runErr != nil {
-			panic(runErr)
-		}
+		time.Sleep(1 * time.Minute)
 	}()
 
 	// Graceful shutdown
@@ -34,6 +44,9 @@ func main() {
 
 	<-stop
 
+	slog.Info("[main] gracefully stopping")
+
 	application.Stop()
-	log.Info("Gracefully stopped")
+
+	slog.Info("[main] gracefully stopped")
 }
