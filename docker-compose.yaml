@@ -10,8 +10,6 @@ services:
       CARS_DB_DSN: "host=postgres user=root password=root dbname=cars sslmode=disable"
       CARS_GRPC_PORT: 8000
       CARS_GRPC_USE_REFLECTION: true
-    stop_signal: SIGINT
-    stop_grace_period: 30s
     ports:
       - 8081:8000
     command:
