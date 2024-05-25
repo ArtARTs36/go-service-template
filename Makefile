@@ -52,7 +52,9 @@ lint: ## Run linter
 	golangci-lint run --fix
 
 up: ## Up services (foreground)
-	docker-compose up
+	docker-compose up -d postgres
+	docker-compose run --rm migrations
+	docker-compose run --rm cars-grpc
 
 up-d: ## Up services (background)
-	docker-compose up
+	docker-compose up -d
