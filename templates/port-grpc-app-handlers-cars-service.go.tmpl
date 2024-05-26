@@ -1,0 +1,16 @@
+package cars
+
+import (
+	"{{ vars.global.go_module_path }}/internal/config"
+	carsapi "{{ vars.global.go_module_path }}/pkg/cars-grpc-api"
+)
+
+type Service struct {
+	carsapi.UnimplementedCarsServiceServer
+
+	container *config.Container
+}
+
+func NewService(cont *config.Container) *Service {
+	return &Service{container: cont}
+}

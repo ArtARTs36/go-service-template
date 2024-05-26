@@ -1,7 +1,7 @@
 SERVICE_NAME=cars
-API_PATH 		   = api/grpc/cars
-PROTO_API_DIR 	   = api/grpc/cars
-PROTO_OUT_DIR 	   = pkg/cars-grpc-api
+API_PATH 		   = api/grpc/${SERVICE_NAME}
+PROTO_API_DIR 	   = api/grpc/${SERVICE_NAME}
+PROTO_OUT_DIR 	   = pkg/${SERVICE_NAME}-grpc-api
 PROTO_API_OUT_DIR  = ${PROTO_OUT_DIR}
 
 .DEFAULT_GOAL := help
@@ -58,3 +58,13 @@ up: ## Up services (foreground)
 
 up-d: ## Up services (background)
 	docker-compose up -d
+
+GO_MODULE_PATH := "$(shell head -n 1 go.mod | sed 's/module *//')"
+
+gen-service: ## Gen service
+	docker run --rm -v ./:/app -w /app \
+      	-u $(shell id -u ${USER}):$(shell id -g ${USER}) \
+		-e SERVICE_NAME=${SERVICE_NAME} \
+		-e GO_MODULE_PATH=${GO_MODULE_PATH} \
+		artarts36/filegen:0.1.2 service-template.yaml
+	make gen

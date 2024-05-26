@@ -1,0 +1,34 @@
+package app
+
+import (
+	"github.com/caarlos0/env/v10"
+	"github.com/pkg/errors"
+
+	"{{ vars.global.go_module_path }}/internal/config"
+)
+
+// Config struct.
+type Config struct {
+	config.Config
+
+	GRPC GRPCConfig `envPrefix:"GRPC_"`
+}
+
+type GRPCConfig struct {
+	Port          int  `env:"PORT,required"`
+	UseReflection bool `env:"USE_REFLECTION"`
+}
+
+// InitConfig func.
+func InitConfig(prefix string) (*Config, error) {
+	c := &Config{}
+	opts := env.Options{
+		Prefix: prefix,
+	}
+
+	if err := env.ParseWithOptions(c, opts); err != nil {
+		return nil, errors.Wrap(err, "init config failed")
+	}
+
+	return c, nil
+}

@@ -1,0 +1,31 @@
+vars:
+  service_name: $SERVICE_NAME
+  go_module_path: $GO_MODULE_PATH
+
+files:
+  - output_path: ./cmd/grpc/main.go
+    template_path: ./templates/cmd-grpc-main.go.tmpl
+
+  - output_path: ./internal/application/car/get.go
+    template_path: ./templates/application-car-get.go.tmpl
+
+  - output_path: ./internal/config/container.go
+    template_path: ./templates/config-container.go.tmpl
+
+  - output_path: ./internal/infrastructure/repository/car.go
+    template_path: ./templates/infrastructure-repository-car.go.tmpl
+
+  - output_path: ./internal/port/grpc/app/app.go
+    template_path: ./templates/port-grpc-app-app.go.tmpl
+
+  - output_path: ./internal/port/grpc/app/config.go
+    template_path: ./templates/port-grpc-app-config.go.tmpl
+
+  - output_path: ./internal/port/grpc/app/register.go
+    template_path: ./templates/port-grpc-app-register.go.tmpl
+
+  - output_path: ./internal/port/grpc/handlers/cars/get.go
+    template_path: ./templates/port-grpc-app-handlers-cars-get.go.tmpl
+
+  - output_path: ./internal/port/grpc/handlers/cars/service.go
+    template_path: ./templates/port-grpc-app-handlers-cars-service.go.tmpl

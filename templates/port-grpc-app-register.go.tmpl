@@ -1,0 +1,13 @@
+package app
+
+import (
+	"google.golang.org/grpc"
+
+	"{{ vars.global.go_module_path }}/internal/config"
+	"{{ vars.global.go_module_path }}/internal/port/grpc/handlers/cars"
+	carsapi "{{ vars.global.go_module_path }}/pkg/cars-grpc-api"
+)
+
+func registerServices(gRPCServer grpc.ServiceRegistrar, cont *config.Container) {
+	carsapi.RegisterCarsServiceServer(gRPCServer, cars.NewService(cont))
+}
