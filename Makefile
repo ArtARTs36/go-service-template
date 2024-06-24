@@ -54,7 +54,7 @@ lint: ## Run linter
 up: ## Up services (foreground)
 	docker-compose up -d postgres
 	docker-compose run --rm migrations
-	docker-compose run --rm cars-grpc
+	docker-compose run --rm --name=${SERVICE_NAME}-grpc --service-ports ${SERVICE_NAME}-grpc
 
 up-d: ## Up services (background)
 	docker-compose up -d
