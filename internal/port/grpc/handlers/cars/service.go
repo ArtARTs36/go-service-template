@@ -2,7 +2,7 @@ package cars
 
 import (
 	"github.com/artarts36/go-service-template/internal/config"
-	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api"
+	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api/v1"
 )
 
 type Service struct {

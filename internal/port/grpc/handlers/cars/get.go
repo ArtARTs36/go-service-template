@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/artarts36/go-service-template/internal/application/car"
-	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api"
+	carsapi "github.com/artarts36/go-service-template/pkg/cars-grpc-api/v1"
 )
 
 func (s *Service) Get(ctx context.Context, req *carsapi.GetCarRequest) (*carsapi.Car, error) {
