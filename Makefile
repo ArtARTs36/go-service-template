@@ -1,8 +1,9 @@
 SERVICE_NAME=cars
 API_PATH 		   = api/grpc/${SERVICE_NAME}
 PROTO_API_DIR 	   = api/grpc/${SERVICE_NAME}
-PROTO_OUT_DIR 	   = pkg/${SERVICE_NAME}-grpc-api
+PROTO_OUT_DIR 	   = pkg/${SERVICE_NAME}-grpc-api/v1
 PROTO_API_OUT_DIR  = ${PROTO_OUT_DIR}
+PROTO_API_HANDLERS_OUT_DIR  = internal/port/grpc/handlers/
 
 .DEFAULT_GOAL := help
 
@@ -36,6 +37,13 @@ gen/proto: ## Generate gRPC structures
 		--go_out=$(PROTO_OUT_DIR) --go_opt=paths=source_relative \
         --go-grpc_out=$(PROTO_OUT_DIR) --go-grpc_opt=paths=source_relative \
         --descriptor_set_out=$(PROTO_OUT_DIR)/api.pb \
+		--go-srv-handler_out=$(PROTO_API_HANDLERS_OUT_DIR) --go-srv-handler_opt=paths=source_relative \
+			--go-srv-handler_opt=out_dir=$(PROTO_API_HANDLERS_OUT_DIR) \
+			--go-srv-handler_opt=overwrite=true \
+			--go-srv-handler_opt=pkg_naming=without_service_suffix \
+			--go-srv-handler_opt=srv_naming=just_service \
+			--go-srv-handler_opt=gen_tests=true \
+			--go-srv-handler_opt=handler_file_naming=without_domain \
         ./${PROTO_API_DIR}/v1/*.proto
 
 gen/go: ## Generate go/mock structures
