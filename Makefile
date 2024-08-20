@@ -76,3 +76,6 @@ gen-service: ## Gen service
 		-e GO_MODULE_PATH=${GO_MODULE_PATH} \
 		artarts36/filegen:0.1.2 service-template.yaml
 	make gen
+
+dump-migrations: ## Dump migrations for all tables
+	db-exporter pg "host=localhost port=5500 user=root password=root dbname=cars sslmode=disable" goose ./migrations
