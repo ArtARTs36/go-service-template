@@ -7,6 +7,7 @@ require (
 	github.com/cappuccinotm/slogx v1.3.0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/getsentry/sentry-go v0.27.0
+	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/jmoiron/sqlx v1.3.5
