@@ -21,7 +21,9 @@ func NewGetOperation(cars domain.CarRepository) *GetOperation {
 }
 
 func (o *GetOperation) Get(ctx context.Context, params *GetOperationParams) (*domain.Car, error) {
-	c, err := o.cars.Find(ctx, params.ID)
+	c, err := o.cars.Get(ctx, &domain.GetCarFilter{
+		ID: params.ID,
+	})
 	if err != nil {
 		if errors.Is(err, repository.ErrNotFound) {
 			return nil, ErrCarNotFound

@@ -5,6 +5,8 @@ PROTO_OUT_DIR 	   = pkg/${SERVICE_NAME}-grpc-api/v1
 PROTO_API_OUT_DIR  = ${PROTO_OUT_DIR}
 PROTO_API_HANDLERS_OUT_DIR  = internal/port/grpc/handlers/
 
+PG_DSN := "host=localhost port=5430 user=root password=root dbname=cars sslmode=disable"
+
 .DEFAULT_GOAL := help
 
 help: ## Show help
@@ -39,7 +41,7 @@ gen/proto: ## Generate gRPC structures
         --descriptor_set_out=$(PROTO_OUT_DIR)/api.pb \
 		--go-srv-handler_out=$(PROTO_API_HANDLERS_OUT_DIR) --go-srv-handler_opt=paths=source_relative \
 			--go-srv-handler_opt=out_dir=$(PROTO_API_HANDLERS_OUT_DIR) \
-			--go-srv-handler_opt=overwrite=true \
+			--go-srv-handler_opt=overwrite=false \
 			--go-srv-handler_opt=pkg_naming=without_service_suffix \
 			--go-srv-handler_opt=srv_naming=just_service \
 			--go-srv-handler_opt=gen_tests=true \
@@ -52,6 +54,7 @@ gen/go: ## Generate go/mock structures
 gen: ## Generate go/mock, gRPC structures
 	make gen/go
 	make gen/proto
+	PG_DSN=${PG_DSN} db-exporter --tasks=gen-entities
 
 test: ## Run go tests
 	go test ./...
@@ -78,4 +81,4 @@ gen-service: ## Gen service
 	make gen
 
 dump-migrations: ## Dump migrations for all tables
-	db-exporter pg "host=localhost port=5500 user=root password=root dbname=cars sslmode=disable" goose ./migrations
+	db-exporter --tasks=dump-migrations

@@ -8,7 +8,6 @@ import (
 	_ "github.com/lib/pq" // postgres
 
 	"github.com/artarts36/go-service-template/internal/application/car"
-	"github.com/artarts36/go-service-template/internal/domain"
 	"github.com/artarts36/go-service-template/internal/infrastructure/repository"
 )
 
@@ -23,9 +22,7 @@ type Container struct {
 
 	Infrastructure struct {
 		DB           *sqlx.DB
-		Repositories struct {
-			CarRepository domain.CarRepository
-		}
+		Repositories *repository.Group
 	}
 
 	appVersion string
@@ -55,7 +52,7 @@ func InitContainer(conf *Config, version string) (*Container, error) {
 }
 
 func (c *Container) initRepositories() {
-	c.Infrastructure.Repositories.CarRepository = repository.NewPGCarRepository(c.Infrastructure.DB)
+	c.Infrastructure.Repositories = repository.NewGroup(c.Infrastructure.DB)
 }
 
 func (c *Container) initOperations() {

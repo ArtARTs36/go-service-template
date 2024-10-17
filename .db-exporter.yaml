@@ -1,0 +1,32 @@
+databases:
+  default:
+    driver: postgres
+    dsn: ${PG_DSN}
+
+tasks:
+  dump-migrations:
+    activities:
+      - export: json-schema
+        spec:
+          pretty: true
+        out:
+          dir: ./out
+
+  gen-entities:
+    activities:
+      - export: go-entity-repository
+        spec:
+          entities:
+            package: internal/domain
+          repositories:
+            package: internal/infrastructure/repository
+            container:
+              struct_name: group
+            interfaces:
+              place: entity
+        out:
+          dir: ./
+
+options:
+  print_stat: true
+  debug: true
