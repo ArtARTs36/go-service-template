@@ -82,3 +82,7 @@ gen-service: ## Gen service
 
 dump-migrations: ## Dump migrations for all tables
 	db-exporter --tasks=dump-migrations
+
+.PHONY: docs
+docs: ## Generate db docs
+	PG_DSN=${PG_DSN} db-exporter --tasks=gen-docs

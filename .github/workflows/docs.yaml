@@ -40,11 +40,4 @@ jobs:
       - name: Generate markdown docs
         uses: artarts36/db-exporter@master
         with:
-          driver-name: pg
-          dsn: "host=localhost port=5499 user=test password=test dbname=cars sslmode=disable"
-          format: md
-          out-dir: ./docs
-          commit-message: "chore: generate documentation for database schema"
-          commit-push: true
-          without-migrations-table: true
-          with-diagram: true
+          tasks: ci-gen-docs

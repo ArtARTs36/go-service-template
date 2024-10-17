@@ -27,6 +27,25 @@ tasks:
         out:
           dir: ./
 
+  ci-gen-docs:
+    commit:
+      message: "chore: generate documentation for database schema"
+      push: true
+    activities:
+      - export: md
+        spec:
+          with_diagram: true
+        out:
+          dir: ./docs
+
+  gen-docs:
+    activities:
+      - export: md
+        spec:
+          with_diagram: true
+        out:
+          dir: ./docs
+
 options:
   print_stat: true
   debug: true
