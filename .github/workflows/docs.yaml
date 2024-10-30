@@ -39,5 +39,7 @@ jobs:
 
       - name: Generate markdown docs
         uses: artarts36/db-exporter@master
+        env:
+          PG_DSN: "host=localhost port=5499 user=test password=test dbname=cars sslmode=disable"
         with:
           tasks: ci-gen-docs
