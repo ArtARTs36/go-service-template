@@ -6,7 +6,7 @@ databases:
 tasks:
   dump-migrations:
     activities:
-      - export: json-schema
+      - export: goose
         spec:
           pretty: true
         out:
