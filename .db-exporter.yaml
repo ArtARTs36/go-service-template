@@ -10,7 +10,7 @@ tasks:
         spec:
           pretty: true
         out:
-          dir: ./out
+          dir: ./migrations
 
   gen-entities:
     activities:
